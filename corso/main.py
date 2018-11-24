@@ -1,8 +1,9 @@
+import time
+import json
+
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
-
-import json
 
 
 class MainHandler(tornado.web.RequestHandler):
@@ -53,6 +54,18 @@ class MainWsHomeHandler(tornado.web.RequestHandler):
         self.render("templates/home_ws.html")
 
 
+class ClockWebSocket(tornado.websocket.WebSocketHandler):
+    def open(self):
+        while True:
+            self.write_message(u"Orario: %s" % time.strftime('%X'))
+            time.sleep(1)
+
+
+class ClockWsHomeHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("templates/home_ws_clock.html")
+
+
 def make_app():
     return tornado.web.Application([
         (r"/", MainHandler),
@@ -62,6 +75,9 @@ def make_app():
         # WS
         (r"/websocket/echo/", EchoWebSocket),
         (r"/home/ws/", MainWsHomeHandler),
+        # WS Clock
+        (r"/websocket/clock/", ClockWebSocket),
+        (r"/home/ws/clock/", ClockWsHomeHandler),
     ], autoreload=True)
 
 
