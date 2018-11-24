@@ -1,5 +1,6 @@
 import tornado.ioloop
 import tornado.web
+import tornado.websocket
 
 import json
 
@@ -11,8 +12,10 @@ class MainHandler(tornado.web.RequestHandler):
 
 class MainJsonEchoHandler(tornado.web.RequestHandler):
     def get(self):
-        nome = self.get_argument("nome", default='')
-        self.write(json.dumps({'nome': nome}))
+        nome = self.get_argument("param", default='')
+        nome2 = self.get_argument("param2", default='')
+        result = int(nome) + int(nome2)
+        self.write(json.dumps({'param': nome, 'param2': nome2, 'result': result}))
 
 
 class MainHomeHandler(tornado.web.RequestHandler):
@@ -22,8 +25,32 @@ class MainHomeHandler(tornado.web.RequestHandler):
 
 class MainWebEchoHandler(tornado.web.RequestHandler):
     def get(self):
-        nome = self.get_argument("nome", default='')
-        self.render("templates/echo.html", nome=nome)
+        param = self.get_argument("param", default=0)
+        param1 = self.get_argument("altro", default=0)
+        result = int(param) + int(param1)
+        dizionario = {'param': param,
+                      'param1': param1,
+                      'result': result}
+        self.render("templates/echo.html", result=result, param=param, param1=param1)
+        # self.render("templates/echo.html", dizionario=dizionario)
+        # self.loader.load("test.html").generate(myvalue="XXX")
+
+
+# WebSocket
+class EchoWebSocket(tornado.websocket.WebSocketHandler):
+    def open(self):
+        print("WebSocket aperta")
+
+    def on_message(self, message):
+        self.write_message(u"Echo: " + message)
+
+    def on_close(self):
+        print("WebSocket chiusa")
+
+
+class MainWsHomeHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("templates/home_ws.html")
 
 
 def make_app():
@@ -32,6 +59,9 @@ def make_app():
         (r"/echo/", MainJsonEchoHandler),
         (r"/echo/web/", MainWebEchoHandler),
         (r"/home/", MainHomeHandler),
+        # WS
+        (r"/websocket/echo/", EchoWebSocket),
+        (r"/home/ws/", MainWsHomeHandler),
     ], autoreload=True)
 
 

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Corso Tornado Conoscerelinux - WebSocket</title>
+    <script>
+        // 403: WebSocket("ws://localhost:8888/websocket/echo/");
+        var ws = new WebSocket("ws://127.0.0.1:8888/websocket/echo/");
+        ws.onopen = function() {
+            ws.send("Invio dati");
+        };
+        ws.onmessage = function (evt) {
+            // alert(evt.data);
+            var container = document.getElementById("container");
+            container.innerText = evt.data;
+        };
+
+        function invia(msg){
+            ws.send(msg);
+        }
+    </script>
+</head>
+<body>
+    <div id="container"></div>
+
+    <div>Input utente: <input type="text" name="txt" value="Digita qualcosa" onkeyup="invia(this.value)"></div>
+</body>
+</html>
