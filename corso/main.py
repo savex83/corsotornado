@@ -24,6 +24,7 @@ class MainHomeHandler(tornado.web.RequestHandler):
         self.render("templates/home.html")
 
 
+# /echo/web/
 class MainWebEchoHandler(tornado.web.RequestHandler):
     def get(self):
         param = self.get_argument("param", default=0)
@@ -32,9 +33,8 @@ class MainWebEchoHandler(tornado.web.RequestHandler):
         dizionario = {'param': param,
                       'param1': param1,
                       'result': result}
-        self.render("templates/echo.html", result=result, param=param, param1=param1)
-        # self.render("templates/echo.html", dizionario=dizionario)
-        # self.loader.load("test.html").generate(myvalue="XXX")
+        # self.render("templates/echo.html", result=result, param=param, param1=param1)
+        self.render("templates/echo.html", **dizionario)
 
 
 # WebSocket
