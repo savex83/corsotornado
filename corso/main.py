@@ -49,7 +49,7 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
     def on_close(self):
         print("WebSocket chiusa")
 
-
+# /home/ws/
 class MainWsHomeHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("templates/home_ws.html")
@@ -63,7 +63,6 @@ class ClockWebSocket(tornado.websocket.WebSocketHandler):
     async def on_message(self, message):
         await gen.sleep(1)
         self.write_message(u"Orario: %s" % time.strftime('%X'))
-
 
     def on_close(self):
         print("WebSocket chiusa")
