@@ -61,7 +61,9 @@ class ClockWebSocket(tornado.websocket.WebSocketHandler):
         print("WebSocket aperta")
 
     async def on_message(self, message):
-        await self.write_message(u"Orario: %s" % time.strftime('%X'))
+        await gen.sleep(1)
+        self.write_message(u"Orario: %s" % time.strftime('%X'))
+
 
     def on_close(self):
         print("WebSocket chiusa")
